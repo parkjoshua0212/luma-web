@@ -4,8 +4,8 @@ The web frontend for [Luma](https://github.com/parkjoshua0212/Luma) — an AI-po
 language conversation practice app. Talks to the Luma backend API to handle auth, 
 conversations, and AI-powered chat and grammar correction.
 
-🔗 **Backend repo & API docs**: https://github.com/parkjoshua0212/Luma  
-📄 **Live API**: https://luma-api-djcb.onrender.com
+**Backend repo & API docs**: https://github.com/parkjoshua0212/Luma  
+**Live API**: https://luma-api-djcb.onrender.com
 
 ## What it does
 - Register / log in (JWT-based, issued by the backend)
@@ -14,6 +14,9 @@ conversations, and AI-powered chat and grammar correction.
 - Inline grammar correction — messages with a mistake show a small lightbulb icon; 
   clicking it reveals the correction and explanation without leaving the chat
 - A standalone grammar checker for one-off sentences, separate from any conversation
+- Handles backend AI failures gracefully — a temporary Gemini outage shows a clear 
+  retry message, and hitting the free-tier's daily quota shows a distinct 
+  "try again tomorrow" message rather than a generic error
 
 ## Tech Stack
 - **React** (Vite) — no meta-framework, kept intentionally simple

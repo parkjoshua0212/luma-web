@@ -42,9 +42,14 @@ export default function Chat() {
       const res = await client.post(`/api/conversations/${id}/message`, { content });
       setMessages((prev) => [...prev, res.data.userMessage, res.data.reply]);
     } catch (err) {
-      if (err.response?.status === 502 && err.response.data?.userMessage) {
-        setMessages((prev) => [...prev, err.response.data.userMessage]);
-        setError('Your message sent, but the AI reply failed. Try sending again.');
+      const data = err.response?.data;
+      if (data?.userMessage) {
+        setMessages((prev) => [...prev, data.userMessage]);
+        setError(
+          err.response.status === 429
+            ? "You've hit today's free AI usage limit. Try again tomorrow."
+            : 'Your message sent, but the AI reply failed. Try sending again.'
+        );
       } else {
         setError('Something went wrong sending that message.');
         setDraft(content);

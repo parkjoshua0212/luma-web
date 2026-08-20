@@ -17,8 +17,12 @@ export default function GrammarCheck() {
     try {
       const res = await client.post('/api/ai/correct', { sentence });
       setResult(res.data);
-    } catch {
-      setError('Could not check that sentence. Try again.');
+    } catch (err) {
+      setError(
+        err.response?.status === 429
+          ? "You've hit today's free AI usage limit. Try again tomorrow."
+          : 'Could not check that sentence. Try again.'
+      );
     } finally {
       setChecking(false);
     }
