@@ -1,0 +1,281 @@
+:root {
+  /* Color */
+  --ink: #0F1229;          /* deep indigo background */
+  --ink-raised: #171B3D;   /* cards, panels */
+  --ink-line: #2A2F5C;     /* borders, dividers */
+  --paper: #F5F2EA;        /* warm off-white text */
+  --paper-dim: #B8B7C9;    /* secondary text */
+  --amber: #F2B84B;        /* Luma's light — primary accent */
+  --amber-dim: #7A5F26;    /* amber for subtle borders/fills */
+  --teal: #6FBFA8;         /* casual-mode accent */
+  --error: #E5765C;
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Work Sans', -apple-system, sans-serif;
+
+  /* Layout */
+  --radius: 10px;
+  --max-width: 720px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin: 0 0 0.4em;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.4rem; }
+
+p { margin: 0 0 1em; color: var(--paper-dim); }
+
+a { color: var(--amber); }
+
+button {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  padding: 0.65em 1.3em;
+  transition: transform 0.08s ease, opacity 0.15s ease;
+}
+
+button:active { transform: scale(0.98); }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: var(--ink);
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--paper);
+  border-color: var(--ink-line);
+}
+.btn-ghost:hover { border-color: var(--amber-dim); }
+
+input, textarea {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius);
+  color: var(--paper);
+  padding: 0.7em 0.9em;
+  width: 100%;
+}
+input::placeholder, textarea::placeholder { color: var(--paper-dim); }
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--paper-dim);
+  margin-bottom: 0.35em;
+}
+
+.field { margin-bottom: 1.1em; }
+
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.error-banner {
+  background: rgba(229, 118, 92, 0.12);
+  border: 1px solid var(--error);
+  color: var(--error);
+  border-radius: var(--radius);
+  padding: 0.7em 1em;
+  font-size: 0.9rem;
+  margin-bottom: 1.2em;
+}
+
+.card {
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+/* --- Mode pill: the signature element. Formal and casual look
+   deliberately different, echoing the app's actual core feature. --- */
+.mode-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.25em 0.75em;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.mode-pill.formal {
+  font-family: var(--font-display);
+  text-transform: none;
+  letter-spacing: 0;
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid var(--amber);
+}
+.mode-pill.casual {
+  background: rgba(111, 191, 168, 0.15);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+}
+
+/* Top nav */
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--ink-line);
+}
+.topnav .brand {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--paper);
+  text-decoration: none;
+}
+.topnav nav { display: flex; gap: 1.2rem; align-items: center; }
+.topnav nav a, .topnav nav button {
+  color: var(--paper-dim);
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  padding: 0;
+  text-decoration: none;
+}
+.topnav nav a:hover, .topnav nav button:hover { color: var(--paper); }
+
+/* Conversation list */
+.conv-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.conv-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  text-decoration: none;
+  color: var(--paper);
+}
+.conv-item:hover { border-color: var(--amber-dim); }
+.conv-item .meta { font-size: 0.8rem; color: var(--paper-dim); margin-top: 0.3em; }
+
+/* Chat */
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 50vh;
+  margin-bottom: 1.2rem;
+}
+.bubble-row {
+  display: flex;
+  flex-direction: column;
+}
+.bubble {
+  position: relative;
+  max-width: 78%;
+  padding: 0.7em 2.2em 0.7em 1em;
+  border-radius: 14px;
+  line-height: 1.45;
+}
+.bubble.user {
+  align-self: flex-end;
+  background: var(--amber);
+  color: var(--ink);
+  border-bottom-right-radius: 4px;
+}
+.bubble.ai {
+  align-self: flex-start;
+  background: var(--ink-raised);
+  border: 1px solid var(--ink-line);
+  border-bottom-left-radius: 4px;
+  padding-right: 1em;
+}
+.lightbulb-btn {
+  position: absolute;
+  right: 0.4em;
+  bottom: 0.4em;
+  background: none;
+  border: none;
+  padding: 0.15em;
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0.75;
+}
+.lightbulb-btn:hover { opacity: 1; transform: scale(1.1); }
+
+.correction-panel {
+  align-self: flex-end;
+  max-width: 78%;
+  margin-top: 0.4em;
+  background: var(--ink-raised);
+  border: 1px solid var(--amber-dim);
+  border-radius: 10px;
+  padding: 0.8em 1em;
+}
+.correction-panel .label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+  margin-bottom: 0.3em;
+}
+.correction-panel .corrected {
+  font-family: var(--font-display);
+  color: var(--amber);
+  font-size: 1.05rem;
+  margin: 0 0 0.4em;
+}
+.correction-panel .explanation {
+  font-size: 0.88rem;
+  color: var(--paper-dim);
+  margin: 0;
+}
+
+.chat-input-row { display: flex; gap: 0.6rem; }
+.chat-input-row textarea { resize: none; }
+
+/* Grammar check */
+.correction-result { margin-top: 1.5rem; }
+.correction-result .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+  margin-bottom: 0.3em;
+}
+.correction-result .original { color: var(--paper-dim); text-decoration: line-through; }
+.correction-result .corrected { color: var(--amber); font-family: var(--font-display); font-size: 1.15rem; }
