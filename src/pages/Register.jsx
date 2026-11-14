@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import WaitingMessage from '../components/WaitingMessage';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -57,6 +58,12 @@ export default function Register() {
           {submitting ? 'Creating account…' : 'Create account'}
         </button>
       </form>
+
+      {submitting && (
+        <div style={{ marginTop: '1em' }}>
+          <WaitingMessage />
+        </div>
+      )}
 
       <p style={{ marginTop: '1.5em' }}>
         Already have an account? <Link to="/login">Log in</Link>

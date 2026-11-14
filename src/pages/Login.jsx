@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import WaitingMessage from '../components/WaitingMessage';
+
+// Demo account for visitors. Set both in the environment (e.g. Vercel) to show
+// the "Try the demo" button; if either is missing, the button is hidden.
+const DEMO_EMAIL = import.meta.env.VITE_DEMO_EMAIL;
+const DEMO_PASSWORD = import.meta.env.VITE_DEMO_PASSWORD;
+const demoEnabled = Boolean(DEMO_EMAIL && DEMO_PASSWORD);
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -10,18 +17,22 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const logIn = async (loginEmail, loginPassword) => {
     setError('');
     setSubmitting(true);
     try {
-      await login(email, password);
+      await login(loginEmail, loginPassword);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Try again.');
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    logIn(email, password);
   };
 
   return (
@@ -44,6 +55,24 @@ export default function Login() {
           {submitting ? 'Logging in…' : 'Log in'}
         </button>
       </form>
+
+      {demoEnabled && (
+        <button
+          type="button"
+          className="btn-ghost"
+          disabled={submitting}
+          onClick={() => logIn(DEMO_EMAIL, DEMO_PASSWORD)}
+          style={{ width: '100%', marginTop: '0.75rem' }}
+        >
+          Try the demo
+        </button>
+      )}
+
+      {submitting && (
+        <div style={{ marginTop: '1em' }}>
+          <WaitingMessage />
+        </div>
+      )}
 
       <p style={{ marginTop: '1.5em' }}>
         New here? <Link to="/register">Create an account</Link>

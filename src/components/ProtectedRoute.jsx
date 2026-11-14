@@ -1,11 +1,18 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import WaitingMessage from './WaitingMessage';
 
 export default function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
-  if (loading) return null; // could show a spinner here
+  if (loading) {
+    return (
+      <div className="page">
+        <WaitingMessage label="Loading…" />
+      </div>
+    );
+  }
   if (!user) return <Navigate to="/login" replace />;
 
   return children;

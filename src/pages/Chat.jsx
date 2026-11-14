@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import client from '../api/client';
 import TopNav from '../components/TopNav';
+import WaitingMessage from '../components/WaitingMessage';
 
 export default function Chat() {
   const { id } = useParams();
@@ -67,7 +68,9 @@ export default function Chat() {
     return (
       <div>
         <TopNav />
-        <div className="page">Loading…</div>
+        <div className="page">
+          <WaitingMessage label="Loading…" />
+        </div>
       </div>
     );
   }

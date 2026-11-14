@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import TopNav from '../components/TopNav';
+import WaitingMessage from '../components/WaitingMessage';
 
 export default function Conversations() {
   const [conversations, setConversations] = useState([]);
@@ -48,7 +49,7 @@ export default function Conversations() {
         {error && <div className="error-banner">{error}</div>}
 
         {loading ? (
-          <p>Loading…</p>
+          <WaitingMessage label="Loading…" />
         ) : conversations.length === 0 ? (
           <div className="card">
             <p style={{ margin: 0 }}>No conversations yet. Start one above.</p>
