@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import client from '../api/client';
 import TopNav from '../components/TopNav';
 import WaitingMessage from '../components/WaitingMessage';
@@ -66,9 +66,9 @@ export default function Chat() {
 
   if (loading) {
     return (
-      <div>
+      <div className="app-shell">
         <TopNav />
-        <div className="page">
+        <div className="center-status">
           <WaitingMessage label="Loading…" />
         </div>
       </div>
@@ -76,69 +76,90 @@ export default function Chat() {
   }
 
   return (
-    <div>
+    <div className="app-shell">
       <TopNav />
-      <div className="page">
-        {conversation && (
-          <div style={{ marginBottom: '1.2rem' }}>
+      <main className="chat-page">
+        <div className="chat-head">
+          <Link to="/" className="back-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            All conversations
+          </Link>
+          {conversation && (
             <span className={`mode-pill ${conversation.mode}`}>{conversation.mode}</span>
-          </div>
-        )}
+          )}
+        </div>
 
-        <div className="chat-window">
+        <div className="chat-window" aria-live="polite">
+          {messages.length === 0 && !error && (
+            <p className="chat-empty">Say hello to start. Your partner will reply in a {conversation?.mode || 'matching'} tone.</p>
+          )}
+
           {messages.map((m) => {
-            const hasCorrection = m.sender === 'user' && m.corrected_content;
+            const isUser = m.sender === 'user';
+            const hasCorrection = isUser && m.corrected_content;
             const isOpen = openCorrectionId === m.id;
 
             return (
-              <div key={m.id} className="bubble-row">
-                <div className={`bubble ${m.sender === 'user' ? 'user' : 'ai'}`}>
-                  {m.content}
-                  {hasCorrection && (
-                    <button
-                      className="lightbulb-btn"
-                      onClick={() => toggleCorrection(m.id)}
-                      aria-label="Show grammar suggestion"
-                      title="Grammar suggestion available"
-                    >
-                      💡
-                    </button>
-                  )}
-                </div>
+              <div key={m.id} className={`bubble-row ${isUser ? 'user' : 'ai'}`}>
+                <div className={`bubble ${isUser ? 'user' : 'ai'}`}>{m.content}</div>
+
+                {hasCorrection && (
+                  <button
+                    className="lightbulb-btn"
+                    onClick={() => toggleCorrection(m.id)}
+                    aria-label="Show grammar suggestion"
+                    aria-expanded={isOpen}
+                    title="Grammar suggestion available"
+                  >
+                    <span className="swatch" aria-hidden="true" />
+                    {isOpen ? 'Hide suggestion' : 'Suggestion'}
+                  </button>
+                )}
 
                 {hasCorrection && isOpen && (
                   <div className="correction-panel">
-                    <div className="label">Suggested</div>
-                    <p className="corrected">{m.corrected_content}</p>
+                    <p className="marked"><span>{m.corrected_content}</span></p>
                     <p className="explanation">{m.correction_explanation}</p>
                   </div>
                 )}
               </div>
             );
           })}
+
+          {sending && (
+            <div className="bubble-row ai">
+              <WaitingMessage label="Thinking…" />
+            </div>
+          )}
           <div ref={bottomRef} />
         </div>
 
-        {error && <div className="error-banner">{error}</div>}
+        <div className="composer">
+          {error && <div className="error-banner" role="alert">{error}</div>}
 
-        <form onSubmit={sendMessage} className="chat-input-row">
-          <textarea
-            rows={2}
-            placeholder="Type a message…"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage(e);
-              }
-            }}
-          />
-          <button type="submit" className="btn-primary" disabled={sending || !draft.trim()}>
-            {sending ? 'Sending…' : 'Send'}
-          </button>
-        </form>
-      </div>
+          <form onSubmit={sendMessage} className="chat-input-row">
+            <textarea
+              rows={1}
+              aria-label="Message"
+              placeholder="Type a message…"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage(e);
+                }
+              }}
+            />
+            <button type="submit" className="btn-primary" disabled={sending || !draft.trim()}>
+              {sending ? 'Sending…' : 'Send'}
+            </button>
+          </form>
+          <p className="composer-hint">Enter to send, Shift + Enter for a new line</p>
+        </div>
+      </main>
     </div>
   );
 }

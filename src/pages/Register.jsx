@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import WaitingMessage from '../components/WaitingMessage';
+import AuthLayout from '../components/AuthLayout';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -27,47 +28,62 @@ export default function Register() {
   };
 
   return (
-    <div className="page" style={{ maxWidth: 400 }}>
-      <h1>Start practicing</h1>
-      <p>A few details and you're in.</p>
+    <AuthLayout>
+      <h2>Create an account</h2>
+      <p className="lede">A few details and you're in.</p>
 
-      {error && <div className="error-banner">{error}</div>}
+      {error && <div className="error-banner" role="alert">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="name">Name</label>
-          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            id="name"
+            type="text"
+            autoComplete="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
         <div className="field">
           <label htmlFor="password">Password</label>
           <input
             id="password"
             type="password"
+            autoComplete="new-password"
+            aria-describedby="password-hint"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             minLength={8}
             required
           />
-          <span style={{ fontSize: '0.78rem', color: 'var(--paper-dim)' }}>At least 8 characters</span>
+          <span id="password-hint" className="hint">At least 8 characters</span>
         </div>
-        <button type="submit" className="btn-primary" disabled={submitting} style={{ width: '100%' }}>
+        <button type="submit" className="btn-primary btn-block" disabled={submitting}>
           {submitting ? 'Creating account…' : 'Create account'}
         </button>
       </form>
 
       {submitting && (
-        <div style={{ marginTop: '1em' }}>
+        <div className="auth-status">
           <WaitingMessage />
         </div>
       )}
 
-      <p style={{ marginTop: '1.5em' }}>
+      <p className="auth-switch">
         Already have an account? <Link to="/login">Log in</Link>
       </p>
-    </div>
+    </AuthLayout>
   );
 }

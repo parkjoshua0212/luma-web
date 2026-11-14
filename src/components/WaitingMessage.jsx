@@ -19,5 +19,9 @@ export default function WaitingMessage({ label = null }) {
   const text = slow ? SLOW_MESSAGE : label;
   if (!text) return null;
 
-  return <p role="status">{text}</p>;
+  return (
+    <p role="status" className={`status${slow ? ' slow' : ''}`}>
+      {text}
+    </p>
+  );
 }

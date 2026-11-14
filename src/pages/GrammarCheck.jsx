@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import client from '../api/client';
 import TopNav from '../components/TopNav';
+import WaitingMessage from '../components/WaitingMessage';
 
 export default function GrammarCheck() {
   const [sentence, setSentence] = useState('');
@@ -29,39 +30,55 @@ export default function GrammarCheck() {
   };
 
   return (
-    <div>
+    <div className="app-shell">
       <TopNav />
-      <div className="page">
-        <h1>Grammar check</h1>
-        <p>Paste a sentence and get a correction with a plain-language explanation.</p>
+      <main className="page">
+        <div className="page-head">
+          <h1>Grammar check</h1>
+          <p className="lede">Paste a sentence and get a correction with a plain-language explanation.</p>
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="field">
-            <textarea
-              rows={3}
-              placeholder="e.g. She dont like the movie."
-              value={sentence}
-              onChange={(e) => setSentence(e.target.value)}
-            />
+        <form onSubmit={handleSubmit} className="panel check-form">
+          <label htmlFor="sentence">Your sentence</label>
+          <textarea
+            id="sentence"
+            rows={3}
+            placeholder="e.g. She dont like the movie."
+            value={sentence}
+            onChange={(e) => setSentence(e.target.value)}
+          />
+          <div className="actions">
+            <button type="submit" className="btn-primary" disabled={checking || !sentence.trim()}>
+              {checking ? 'Checking…' : 'Check sentence'}
+            </button>
           </div>
-          <button type="submit" className="btn-primary" disabled={checking || !sentence.trim()}>
-            {checking ? 'Checking…' : 'Check sentence'}
-          </button>
         </form>
 
-        {error && <div className="error-banner">{error}</div>}
-
-        {result && (
-          <div className="correction-result card">
-            <div className="label">Original</div>
-            <p className="original">{result.original}</p>
-            <div className="label">Corrected</div>
-            <p className="corrected">{result.corrected}</p>
-            <div className="label">Why</div>
-            <p style={{ color: 'var(--paper)' }}>{result.explanation}</p>
+        {checking && (
+          <div style={{ marginTop: '1rem' }}>
+            <WaitingMessage />
           </div>
         )}
-      </div>
+
+        {error && <div className="error-banner" role="alert" style={{ marginTop: '1.5rem' }}>{error}</div>}
+
+        {result && (
+          <section className="correction-result panel" aria-live="polite">
+            <div className="result-row">
+              <span className="result-label">You wrote</span>
+              <p className="struck">{result.original}</p>
+            </div>
+            <div className="result-row">
+              <span className="result-label">Corrected</span>
+              <p className="marked"><span>{result.corrected}</span></p>
+            </div>
+            <div className="result-row">
+              <span className="result-label">Why</span>
+              <p>{result.explanation}</p>
+            </div>
+          </section>
+        )}
+      </main>
     </div>
   );
 }

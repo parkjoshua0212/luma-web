@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="page">
+      <div className="center-status">
         <WaitingMessage label="Loading…" />
       </div>
     );

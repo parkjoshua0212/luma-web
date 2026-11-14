@@ -1,6 +1,15 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
+export function Brand({ to = '/' }) {
+  return (
+    <Link to={to} className="brand">
+      <span className="brand-mark" aria-hidden="true" />
+      Luma
+    </Link>
+  );
+}
 
 export default function TopNav() {
   const { user, logout } = useAuth();
@@ -11,19 +20,25 @@ export default function TopNav() {
     navigate('/login');
   };
 
+  const navClass = ({ isActive }) => (isActive ? 'active' : undefined);
+
   return (
-    <div className="topnav">
-      <Link to="/" className="brand">Luma</Link>
-      <nav>
+    <header className="topnav">
+      <div className="topnav-inner">
+        <Brand />
         {user && (
           <>
-            <Link to="/">Conversations</Link>
-            <Link to="/grammar">Grammar check</Link>
-            <span style={{ color: 'var(--paper-dim)' }}>{user.name || user.email}</span>
-            <button onClick={handleLogout}>Log out</button>
+            <nav aria-label="Main">
+              <NavLink to="/" end className={navClass}>Conversations</NavLink>
+              <NavLink to="/grammar" className={navClass}>Grammar check</NavLink>
+            </nav>
+            <div className="user-menu">
+              <span className="user-name">{user.name || user.email}</span>
+              <button className="logout-btn" onClick={handleLogout}>Log out</button>
+            </div>
           </>
         )}
-      </nav>
-    </div>
+      </div>
+    </header>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import WaitingMessage from '../components/WaitingMessage';
+import AuthLayout from '../components/AuthLayout';
 
 // Demo account for visitors. Set both in the environment (e.g. Vercel) to show
 // the "Try the demo" button; if either is missing, the button is hidden.
@@ -36,47 +37,63 @@ export default function Login() {
   };
 
   return (
-    <div className="page" style={{ maxWidth: 400 }}>
-      <h1>Welcome back</h1>
-      <p>Pick up a conversation where you left off.</p>
+    <AuthLayout>
+      <h2>Log in</h2>
+      <p className="lede">Pick up a conversation where you left off.</p>
 
-      {error && <div className="error-banner">{error}</div>}
+      {error && <div className="error-banner" role="alert">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
         <div className="field">
           <label htmlFor="password">Password</label>
-          <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
-        <button type="submit" className="btn-primary" disabled={submitting} style={{ width: '100%' }}>
+        <button type="submit" className="btn-primary btn-block" disabled={submitting}>
           {submitting ? 'Logging in…' : 'Log in'}
         </button>
       </form>
 
       {demoEnabled && (
-        <button
-          type="button"
-          className="btn-ghost"
-          disabled={submitting}
-          onClick={() => logIn(DEMO_EMAIL, DEMO_PASSWORD)}
-          style={{ width: '100%', marginTop: '0.75rem' }}
-        >
-          Try the demo
-        </button>
+        <div className="demo-box">
+          <button
+            type="button"
+            className="btn-demo"
+            disabled={submitting}
+            onClick={() => logIn(DEMO_EMAIL, DEMO_PASSWORD)}
+          >
+            Try the demo
+          </button>
+          <p>No sign-up needed. Logs you into a shared demo account.</p>
+        </div>
       )}
 
       {submitting && (
-        <div style={{ marginTop: '1em' }}>
+        <div className="auth-status">
           <WaitingMessage />
         </div>
       )}
 
-      <p style={{ marginTop: '1.5em' }}>
+      <p className="auth-switch">
         New here? <Link to="/register">Create an account</Link>
       </p>
-    </div>
+    </AuthLayout>
   );
 }
